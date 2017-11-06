@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 //TODO store results in file
-//TODO create github repo
 //TODO translate all outputs in english
 
 public class Spider {
