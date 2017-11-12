@@ -1,10 +1,14 @@
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.jsoup.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.*;
+
+import com.opencsv.CSVWriter;
 
 public class SpiderLeg {
 	
@@ -56,10 +60,28 @@ public class SpiderLeg {
 				this.links.add(link.absUrl("href"));
 			}
 			
-			//crawling fields from kickstarter project page (page of an project that is already finished)
+			//crawling fields from kickstarter project page
 			if (url.contains("www.kickstarter.com/projects/")) {
 				KickstarterInterpreter kickstarterInterpreter = new KickstarterInterpreter();
-				ArrayList<String> kickstarterProjectValues = kickstarterInterpreter.getProjectValues(htmlDocument, url);				
+				ArrayList<String> kickstarterProjectValues = kickstarterInterpreter.getProjectValues(htmlDocument, url);
+				
+				//convert ArrayList to Array
+				String[] valueArray = new String[kickstarterProjectValues.size()];
+				valueArray = kickstarterProjectValues.toArray(valueArray);
+				
+				//create header line for csv file
+				String [] headerLine = "Titel,Kurzbeschreibung,Projektgründer,Projektgründer ID,Anzahl Unterstützer,Finanzierungsziel,Finanzierungssumme,Ort,Kategorie".split(",");
+				
+				//create csv file name
+				String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+				String csvFileName = "kickstarterResult_" + timeStamp + ".csv";
+				
+				//write crawling results in csv-file
+				System.out.println("**Writing** Storing crawling results in " + csvFileName);
+				CSVWriter writer = new CSVWriter(new FileWriter(csvFileName));
+				writer.writeNext(headerLine);
+				writer.writeNext(valueArray);
+				writer.close();
 			}
 			
 			return true;

@@ -15,6 +15,8 @@ public class KickstarterInterpreter {
 	 * @return a list of all crawled values of the current project
 	 */
 	public ArrayList<String> getProjectValues(Document htmlDocument, String url) {
+		
+		System.out.println("**Crawling** Extracting project values from: " + url);
 
 		ArrayList<String> projectValues = new ArrayList<String>();
 
@@ -167,6 +169,7 @@ public class KickstarterInterpreter {
 		projectValues.add(category);
 
 		// testing results
+		/*
 		System.out.println("Titel: " + title);
 		System.out.println("Kurzbeschreibung: " + shortDescription);
 		System.out.println("Projektgründer: " + creatorName + " (Id: " + creatorId + ")");
@@ -175,6 +178,7 @@ public class KickstarterInterpreter {
 		System.out.println("Gesamtsumme ($): " + totalFunding);
 		System.out.println("Ort: " + location);
 		System.out.println("Kategorie: " + category);
+		*/
 
 		return projectValues;
 	}
