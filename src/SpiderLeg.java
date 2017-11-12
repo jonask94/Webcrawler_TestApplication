@@ -56,63 +56,10 @@ public class SpiderLeg {
 				this.links.add(link.absUrl("href"));
 			}
 			
-			//TODO: kommentieren
-			//TODO: auf moegliche null Werte pruefen
-			//TODO: auslagern auf kickstarterInterpreter
-			//TODO: vervollstaendigen und fuer aktuell laufende Projekte anpassen
 			//crawling fields from kickstarter project page (page of an project that is already finished)
 			if (url.contains("www.kickstarter.com/projects/")) {
-				String title = htmlDocument.select("h2.project-profile__title").first().getElementsByTag("a").first().ownText();
-				String shortDescription = htmlDocument.select("div.NS_project_profiles__blurb").first().select("span.content").first().ownText();
-				String creatorName = htmlDocument.select("div.creator-name").first().getElementsByTag("a").first().ownText();
-				int positionOfCreatorId = url.indexOf("/projects/")+"/projects/".length();
-				String creatorId = url.substring(positionOfCreatorId);
-				creatorId = creatorId.split("/", 2)[0];
-				String NumberOfBackers = htmlDocument.select("div.NS_campaigns__spotlight_stats").first().getElementsByTag("b").first().ownText().split("\\s", 2)[0];
-				if (NumberOfBackers.contains(",")) {
-					NumberOfBackers = NumberOfBackers.replaceAll("[,]", ".");			
-				}
-				Element helperElementForFundingGoal = htmlDocument.select("div.NS_projects__category_location").first();
-				while(helperElementForFundingGoal!=null){
-					helperElementForFundingGoal = helperElementForFundingGoal.parent();
-					if(helperElementForFundingGoal.hasClass("row")){
-					break;
-					}
-				}
-				helperElementForFundingGoal = helperElementForFundingGoal.getElementsMatchingOwnText("pledged of goal").first();
-				String fundingGoal = helperElementForFundingGoal.select("span.money").first().ownText().replaceAll("[^0-9,.]", "");
-				if(fundingGoal.contains(",") || fundingGoal.contains(".")){
-					fundingGoal = fundingGoal.replaceAll("[.]", "#");
-					fundingGoal = fundingGoal.replaceAll("[,]", ".");
-					fundingGoal = fundingGoal.replaceAll("[#]", ",");
-				}
-				String totalFunding = htmlDocument.select("div.NS_campaigns__spotlight_stats").first().select("span.money").first().ownText().replaceAll("[^0-9,.]", "");
-				if(totalFunding.contains(",") || totalFunding.contains(".")){
-					totalFunding = totalFunding.replaceAll("[.]", "#");
-					totalFunding = totalFunding.replaceAll("[,]", ".");
-					totalFunding = totalFunding.replaceAll("[#]", ",");
-				}
-				Element helperElementForLocationAndCategory = htmlDocument.select("div.NS_projects__category_location").first();
-				Elements locationAndCategoryElements = helperElementForLocationAndCategory.getElementsByTag("a");
-				String location = "not found";
-				String category = "not found";
-				for (Element element : locationAndCategoryElements) {
-					if (!element.getElementsByClass("ksr-icon__location").isEmpty()) {
-						location = element.ownText();
-					}
-					if (!element.getElementsByClass("ksr-icon__tag").isEmpty()) {
-						category = element.ownText();
-					}
-				}
-				System.out.println("Titel: " + title);
-				System.out.println("Kurzbeschreibung: " + shortDescription);
-				System.out.println("Projektgründer: " + creatorName + " (Id: " + creatorId + ")");
-				System.out.println("Anzahl Unterstützer: " + NumberOfBackers);
-				System.out.println("Finanzierungsziel ($): " + fundingGoal);
-				System.out.println("Gesamtsumme ($): " + totalFunding);
-				System.out.println("Ort: " + location);
-				System.out.println("Kategorie: " + category);
-				
+				KickstarterInterpreter kickstarterInterpreter = new KickstarterInterpreter();
+				ArrayList<String> kickstarterProjectValues = kickstarterInterpreter.getProjectValues(htmlDocument, url);				
 			}
 			
 			return true;
